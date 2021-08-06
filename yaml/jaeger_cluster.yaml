@@ -1,0 +1,27 @@
+apiVersion: jaegertracing.io/v1
+kind: Jaeger
+metadata:
+  name: jaeger
+spec:
+  strategy: allInOne
+  allInOne:
+    image: jaegertracing/all-in-one:1.24
+    options:
+      log-level: debug
+      query:
+        base-path: /
+  storage:
+    options:
+      memory:
+        max-traces: 100000
+  ingress:
+    enabled: true
+    annotations:
+      kubernetes.io/ingress.class: nginx
+      cert-manager.io/cluster-issuer: letsencrypt
+    hosts:
+      - jaeger.aksaz.gok8s.top
+    tls:
+      - hosts:
+          - jaeger.aksaz.gok8s.top
+        secretName: jaeger-tls      

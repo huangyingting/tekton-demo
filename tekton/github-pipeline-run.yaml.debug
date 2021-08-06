@@ -1,0 +1,25 @@
+apiVersion: tekton.dev/v1beta1
+kind: PipelineRun
+metadata:
+  generateName: podinfo-pr-
+spec:
+  pipelineRef:
+    name: build-and-deploy-pipeline
+  params:
+    - name: gitUrl
+      value: https://github.com/huangyingting/podinfo
+    - name: gitRevision
+      value: master
+    - name: pathToContext
+      value: ./
+    - name: pathToYamlFile
+      value: deploy/podinfo.yaml
+    - name: imageUrl
+      value: harbor.cn.gok8s.top/cloudnative/podinfo
+    - name: imageTag
+      value: "latest"
+  serviceAccountName: pipeline-account
+  workspaces:
+    - name: git-source
+      persistentVolumeClaim:
+        claimName: podinfo-source-pvc
